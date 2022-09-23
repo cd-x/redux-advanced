@@ -3,8 +3,8 @@ import Layout from "./components/Layout/Layout";
 import Products from "./components/Shop/Products";
 import { useDispatch, useSelector } from "react-redux";
 import { Fragment, useEffect } from "react";
-import { uiActions } from "./store/ui-slice";
 import Notification from "./components/UI/Notification";
+import { sendCartToFirebase } from "./store/cart-slice";
 
 // to avoid loading for the first time
 let initialLoad = true;
@@ -18,42 +18,10 @@ function App() {
       initialLoad = false;
       return;
     }
-    dispatch(
-      uiActions.setNotification({
-        status: "pending",
-        title: "Sending...",
-        message: "Sending Cart data !",
-      })
-    );
-    const sendCartData = async () => {
-      const response = await fetch(
-        "https://redux-http-27f57-default-rtdb.firebaseio.com/cart.json",
-        {
-          method: "PUT",
-          body: JSON.stringify(cart),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed in sending cart data !");
-      }
-      dispatch(
-        uiActions.setNotification({
-          status: "success",
-          title: "Success",
-          message: "Cart dat sent successfully !",
-        })
-      );
-    };
-
-    sendCartData().catch((error) => {
-      dispatch(
-        uiActions.setNotification({
-          status: "error",
-          title: "Error, ",
-          message: "Failed to send data !",
-        })
-      );
-    });
+    /**
+     * dispatch here takes action creator and passes dispatch as default to parameter function
+     */
+    dispatch(sendCartToFirebase(cart));
   }, [cart, dispatch]);
   return (
     <Fragment>
