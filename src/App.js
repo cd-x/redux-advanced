@@ -23,7 +23,14 @@ function App() {
     /**
      * dispatch here takes action creator and passes dispatch as default to parameter function
      */
-    dispatch(sendCartToFirebase(cart));
+    if (cart.updated) {
+      dispatch(
+        sendCartToFirebase({
+          totalCount: cart.totalCount,
+          items: cart.items,
+        })
+      );
+    }
   }, [cart, dispatch]);
   return (
     <Fragment>
