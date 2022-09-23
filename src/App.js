@@ -4,7 +4,8 @@ import Products from "./components/Shop/Products";
 import { useDispatch, useSelector } from "react-redux";
 import { Fragment, useEffect } from "react";
 import Notification from "./components/UI/Notification";
-import { sendCartToFirebase } from "./store/cart-slice";
+import { sendCartToFirebase } from "./store/cart-actions";
+import { fetchCartFromFirebase } from "./store/cart-actions";
 
 // to avoid loading for the first time
 let initialLoad = true;
@@ -16,6 +17,7 @@ function App() {
   useEffect(() => {
     if (initialLoad) {
       initialLoad = false;
+      dispatch(fetchCartFromFirebase());
       return;
     }
     /**
