@@ -8,14 +8,19 @@ export const fetchCartFromFirebase = () => {
         "https://redux-http-27f57-default-rtdb.firebaseio.com/cart.json"
       );
       if (!response.ok) {
-        throw new Error("Failed to load cart !");
+        throw new Error(response.statusText);
       }
       return response.json();
     };
 
     try {
       const cartData = await fetchCartData();
-      dispatch(cartActions.replaceCart(cartData));
+      dispatch(
+        cartActions.replaceCart({
+          items: cartData.items || [],
+          totalCount: cartData.totalCount || 0,
+        })
+      );
     } catch (error) {
       dispatch(
         uiActions.setNotification({
